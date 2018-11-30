@@ -153,7 +153,7 @@ def train(epoch):
     params = list(net.parameters())
     n_params = len(params)
     avg_loss = 10000
-    T = 0.01
+    T = 0.05
     factors = [None] * n_params
     print('\n=> Training Epoch #%d, LR=%.4f' %(epoch, cf.learning_rate(args.lr, epoch)))
     for batch_idx, (inputs, targets) in enumerate(trainloader):
@@ -178,21 +178,19 @@ def train(epoch):
         group_cnt += targets.size(0)
         if group_cnt > group_size:
             group_loss /= group_cnt
-            group_cnt = 0
             # sys.stdout.write(str(torch.exp((group_loss - avg_loss) / T)))
             if group_loss > avg_loss and torch.rand(1) > torch.exp((avg_loss - group_loss) / T):
-                print('REJ', group_loss, avg_loss, torch.exp((avg_loss - group_loss) / T))
+                print('REJ', '%.2f' % T, avg_loss, group_loss, torch.exp((avg_loss - group_loss) / T))
                 for i in range(n_params):
                     params[i].data.div_(factors[i])
             else:
-                print('ACC', group_loss, avg_loss, torch.exp((avg_loss - group_loss) / T))
-            avg_loss = group_loss
+                print('ACC', '%.2f' % T, avg_loss, group_loss, torch.exp((avg_loss - group_loss) / T))
+                avg_loss = group_loss
             group_loss = 0
             group_cnt = 0
             T *= 0.99
-            sys.stdout.write('T=%.3f' % T)
             for i in range(n_params):
-                factors[i] = torch.normal(torch.ones_like(params[i]), 0.01)
+                factors[i] = torch.normal(torch.ones_like(params[i]), 0.05)
                 params[i].data.mul_(factors[i])
 
 def test(epoch):
