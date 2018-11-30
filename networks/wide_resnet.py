@@ -61,6 +61,7 @@ class Wide_ResNet(nn.Module):
         self.linear = nn.Linear(nStages[3], num_classes)
 
     def _wide_layer(self, block, planes, num_blocks, dropout_rate, stride):
+        num_blocks = int(num_blocks)
         strides = [stride] + [1]*(num_blocks-1)
         layers = []
 

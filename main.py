@@ -113,7 +113,7 @@ if (args.testOnly):
         total += targets.size(0)
         correct += predicted.eq(targets.data).cpu().sum()
 
-    acc = 100.*correct/total
+    acc = 100.*correct.numpy()/total
     print("| Test Result\tAcc@1: %.2f%%" %(acc))
 
     sys.exit(0)
@@ -168,7 +168,7 @@ def train(epoch):
         sys.stdout.write('\r')
         sys.stdout.write('| Epoch [%3d/%3d] Iter[%3d/%3d]\t\tLoss: %.4f Acc@1: %.3f%%'
                 %(epoch, num_epochs, batch_idx+1,
-                    (len(trainset)//batch_size)+1, loss.data[0], 100.*correct/total))
+                    (len(trainset)//batch_size)+1, loss.data[0], 100.*correct.numpy()/total))
         sys.stdout.flush()
 
 def test(epoch):
@@ -190,7 +190,7 @@ def test(epoch):
         correct += predicted.eq(targets.data).cpu().sum()
 
     # Save checkpoint when best model
-    acc = 100.*correct/total
+    acc = 100.*correct.numpy()/total
     print("\n| Validation Epoch #%d\t\t\tLoss: %.4f Acc@1: %.2f%%" %(epoch, loss.data[0], acc))
 
     if acc > best_acc:

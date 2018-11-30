@@ -2,8 +2,8 @@
 import math
 
 start_epoch = 1
-num_epochs = 200
-batch_size = 128
+num_epochs = 100
+batch_size = 512
 optim_type = 'SGD'
 
 mean = {
